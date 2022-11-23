@@ -1,2 +1,2 @@
-export {Appointment} from './Appointment';
-export {Home} from './Home';
+export { AppointmentScreen } from './AppointmentScreen';
+export { HomeScreen } from './HomeScreen';

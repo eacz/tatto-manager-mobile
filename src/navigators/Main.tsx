@@ -1,5 +1,5 @@
 import {createNativeStackNavigator, NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Home, Appointment} from '../screens';
+import {HomeScreen, AppointmentScreen} from '../screens';
 
 export type MainStackParamList = {
   Home: undefined,
@@ -11,13 +11,12 @@ const Stack = createNativeStackNavigator<MainStackParamList>();
 export type HomeScreenRouteProp = NativeStackScreenProps<MainStackParamList, 'Home'>
 export type AppointmentScreenRouteProp = NativeStackScreenProps<MainStackParamList, 'Appointment'>
 
-const Main = () => {
+export const Main = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Appointment" component={Appointment} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Appointment" component={AppointmentScreen} />
     </Stack.Navigator>
   );
 };
 
-export default Main;
