@@ -1,8 +1,12 @@
+import { useContext, useState } from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { useState } from 'react'
+import { ThemeContext } from '../context/themeContext/ThemeContext'
 
 export const AppointmentScreen = () => {
+  const {
+    theme: { colors },
+  } = useContext(ThemeContext)
   const [showTime, setShowTime] = useState(false)
   const [showDate, setShowDate] = useState(false)
 
@@ -10,19 +14,21 @@ export const AppointmentScreen = () => {
     setShowDate(false)
   }
 
-  const onChangeTime = (event: any, selectedDate: Date | undefined) => {    
+  const onChangeTime = (event: any, selectedDate: Date | undefined) => {
     setShowTime(false)
   }
 
   return (
-    <View>
+    <View style={{...styles.container, backgroundColor: colors.background}}>
       <Text>Turno</Text>
 
       <TextInput style={styles.input} placeholder='Cliente' />
 
       <TextInput style={styles.input} keyboardType='numeric' placeholder='Precio' />
 
-      <Text style={styles.input} onPress={() => setShowDate(true)}>Fecha</Text>
+      <Text style={styles.input} onPress={() => setShowDate(true)}>
+        Fecha
+      </Text>
       {showDate && (
         <DateTimePicker
           testID='dateTimePicker'
@@ -32,7 +38,9 @@ export const AppointmentScreen = () => {
           onChange={onChangeDate}
         />
       )}
-      <Text  style={styles.input} onPress={() => setShowTime(true)}>Hora</Text>
+      <Text style={styles.input} onPress={() => setShowTime(true)}>
+        Hora
+      </Text>
       {showTime && (
         <DateTimePicker
           testID='dateTimePicker'
@@ -47,5 +55,6 @@ export const AppointmentScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  input: {marginTop: 20},
+  container: {flex: 1},
+  input: { marginTop: 20 },
 })

@@ -1,7 +1,8 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { Main } from './src/navigators/Main';
+import { NavigationContainer } from '@react-navigation/native'
+import { Main } from './src/navigators/Main'
 
-import {LocaleConfig} from 'react-native-calendars';
+import { LocaleConfig } from 'react-native-calendars'
+import { ThemeProvider } from './src/context/themeContext/ThemeContext'
 
 LocaleConfig.locales['es'] = {
   monthNames: [
@@ -16,22 +17,36 @@ LocaleConfig.locales['es'] = {
     'Septiembre',
     'Octubre',
     'Noviembre',
-    'Diciembre'
+    'Diciembre',
   ],
-  monthNamesShort: ['Ene.', 'Feb.', 'Mar', 'Abril', 'Mayo', 'Jun.', 'Jul.', 'Agos.', 'Sept.', 'Oct.', 'Nov.', 'Dic.'],
+  monthNamesShort: [
+    'Ene.',
+    'Feb.',
+    'Mar',
+    'Abril',
+    'Mayo',
+    'Jun.',
+    'Jul.',
+    'Agos.',
+    'Sept.',
+    'Oct.',
+    'Nov.',
+    'Dic.',
+  ],
   dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
   dayNamesShort: ['Dom.', 'Lun.', 'Mar.', 'Mier.', 'Jue.', 'Vier.', 'Sab.'],
-  today: "Hoy"
-};
-LocaleConfig.defaultLocale = 'es';
-
+  today: 'Hoy',
+}
+LocaleConfig.defaultLocale = 'es'
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Main />
-    </NavigationContainer>
-  );
-};
+    <ThemeProvider>
+      <NavigationContainer>
+        <Main />
+      </NavigationContainer>
+    </ThemeProvider>
+  )
+}
 
-export default App;
+export default App

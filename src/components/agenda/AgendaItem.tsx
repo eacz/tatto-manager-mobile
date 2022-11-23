@@ -1,7 +1,9 @@
+import { useContext } from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { AgendaEntry } from 'react-native-calendars'
 import { MainStackParamList } from '../../navigators/Main'
+import { ThemeContext } from '../../context/themeContext/ThemeContext'
 
 interface Props {
   item: AgendaEntry
@@ -10,10 +12,17 @@ interface Props {
 }
 
 export const AgendaItem = ({ item, isFirst, navigation }: Props) => {
+  const {
+    theme: { colors },
+  } = useContext(ThemeContext)
+
   return (
-    <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Appointment')}>
-      <Text style={styles.height}>{item.height}hs</Text>
-      <Text style={styles.itemText}>{item.name}</Text>
+    <TouchableOpacity
+      style={{ ...styles.item, backgroundColor: colors.background }}
+      onPress={() => navigation.navigate('Appointment')}
+    >
+      <Text style={{ ...styles.height, color: colors.text }}>{item.height}hs</Text>
+      <Text style={{ ...styles.itemText, color: colors.text }}>{item.name}</Text>
     </TouchableOpacity>
   )
 }
