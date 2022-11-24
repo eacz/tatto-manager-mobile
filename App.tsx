@@ -3,6 +3,8 @@ import { Main } from './src/navigators/Main'
 
 import { LocaleConfig } from 'react-native-calendars'
 import { ThemeProvider } from './src/context/themeContext/ThemeContext'
+import { Provider } from 'react-redux'
+import { store } from './src/store/store'
 
 LocaleConfig.locales['es'] = {
   monthNames: [
@@ -41,11 +43,13 @@ LocaleConfig.defaultLocale = 'es'
 
 const App = () => {
   return (
-    <ThemeProvider>
-      <NavigationContainer>
-        <Main />
-      </NavigationContainer>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <NavigationContainer>
+          <Main />
+        </NavigationContainer>
+      </ThemeProvider>
+    </Provider>
   )
 }
 

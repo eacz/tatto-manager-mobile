@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import { AgendaItem, NoAppointment } from './index'
 import { MainStackParamList } from '../../navigators/Main'
 import { ThemeContext } from '../../context/themeContext/ThemeContext'
+import { useAppSelector } from '../../hooks/redux'
 
 const minDate = dayjs().subtract(1, 'year').toISOString()
 const maxDate = dayjs().add(1, 'year').toISOString()
@@ -16,6 +17,7 @@ interface Props {
 
 export const Agenda = ({ navigation }: Props) => {
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toISOString().split('T')[0])
+  const { agenda } = useAppSelector((state) => state.appointment)
   const {
     theme: { colors },
   } = useContext(ThemeContext)
@@ -25,19 +27,26 @@ export const Agenda = ({ navigation }: Props) => {
     navigation.navigate('Appointment')
   }
 
-  const items: AgendaSchedule = {
-    '2022-11-23': [
-      { name: 'Turno - Poli', height: 11, day: new Date().toISOString() },
-      { name: 'Turno - Pato', height: 14, day: new Date().toISOString() },
-    ],
-  }
-
   const formatDate = (date: Date | string) =>
     typeof date === 'object' ? date.toISOString().split('T')[0] : dayjs(date).toISOString().split('T')[0]
 
   return (
     <View style={{ ...styles.container, backgroundColor: colors.background }}>
       <AgendaComponent
+        items={agenda}
+        onDayChange={onDayPress}
+        
+        renderEmptyData={() => <NoAppointment />}
+        renderItem={(item, isFirst) => <AgendaItem item={item} isFirst={isFirst} navigation={navigation} />}
+        
+        testID='mainAgenda'
+        minDate={minDate}
+        maxDate={maxDate}
+        current={selectedDate}
+        selected={selectedDate}
+        displayLoadingIndicator={false}
+        showClosingKnob={true}
+        showOnlySelectedDayItems={true}
         theme={{
           backgroundColor: colors.background,
           calendarBackground: colors.background,
@@ -49,41 +58,7 @@ export const Agenda = ({ navigation }: Props) => {
           todayBackgroundColor: colors.background,
           monthTextColor: colors.text,
           dayTextColor: colors.text,
-          
-          contentStyle: {backfaceVisibility: 'hidden', backgroundColor: 'red'},
-          arrowStyle: {backgroundColor: colors.primary},
-          arrowColor: colors.primary,
-          stylesheet: {
-            agenda: {
-              main: {
-                background: colors.primary,
-                backgroundColor: colors.primary,
-              },
-              list: {
-                background: colors.primary,
-
-                backgroundColor: colors.primary
-              }
-            },
-          },
-
         }}
-        CellRendererComponent={() => <View style={{ backgroundColor: colors.background }}></View>}
-        style={{ backgroundColor: colors.background }}
-        contentContainerStyle={{ backgroundColor: colors.background }}
-        calendarStyle={{ backgroundColor: colors.background }}
-        columnWrapperStyle={{ backgroundColor: colors.background }}
-        testID='mainAgenda'
-        items={items}
-        minDate={minDate}
-        maxDate={maxDate}
-        renderItem={(item, isFirst) => <AgendaItem item={item} isFirst={isFirst} navigation={navigation} />}
-        onDayChange={onDayPress}
-        current={selectedDate}
-        selected={selectedDate}
-        showClosingKnob={true}
-        displayLoadingIndicator={false}
-        renderEmptyData={() => <NoAppointment />}
       />
     </View>
   )
