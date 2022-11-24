@@ -16,12 +16,30 @@ export const AgendaItem = ({ item, isFirst, navigation }: Props) => {
     theme: { colors },
   } = useContext(ThemeContext)
 
+  const parseNumberToHour = (number: number): string => {
+    const stringHour = number.toString()
+    const hasDecimal = stringHour.includes('.')
+    let hour: string;
+    
+    if(hasDecimal){
+      hour = `${stringHour.split('.')[0]}:${stringHour.split('.')[1]}`
+      if(hour.length === 4) {
+        hour+= '0'
+      }
+    } else {
+      hour = `${stringHour}:00`
+    }
+    return hour;
+  }
+
+  parseNumberToHour(item.height)
+
   return (
     <TouchableOpacity
       style={{ ...styles.item, backgroundColor: colors.background }}
       onPress={() => navigation.navigate('Appointment')}
     >
-      <Text style={{ ...styles.height, color: colors.text }}>{item.height}hs</Text>
+      <Text style={{ ...styles.height, color: colors.text }}>{parseNumberToHour(item.height)}hs</Text>
       <Text style={{ ...styles.itemText, color: colors.text }}>{item.name}</Text>
     </TouchableOpacity>
   )
