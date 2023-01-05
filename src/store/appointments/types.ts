@@ -1,7 +1,7 @@
 import { AgendaSchedule } from 'react-native-calendars'
 
 export interface Appointment {
-  id: string
+  _id: string
   client: string
   day: Date
   price: number
@@ -18,4 +18,17 @@ export interface AppointmentsState {
   appointments: Appointment[]
   currentAppointments: Appointment[]
   selectedDay: Date
+}
+
+export interface TattoResponse {
+  _id: string
+  client: string
+  day: string
+  price: number
+  description?: string
+  images: string[]
+  clientContact: string
+  hasPayedAdvancedDeposit: boolean
+  advancedDepositAmount: number
+  done: boolean
 }

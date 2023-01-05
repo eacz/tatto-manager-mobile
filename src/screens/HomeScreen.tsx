@@ -1,15 +1,14 @@
-import { StyleSheet, View } from 'react-native';
-import { Agenda } from '../components';
-import { HomeScreenRouteProp } from '../navigators/Main';
+import { StyleSheet, View } from 'react-native'
+import { Agenda } from '../components'
 
-export const HomeScreen = ({ navigation }: HomeScreenRouteProp) => {
+export const HomeScreen = () => {
   return (
     <View style={styles.container}>
-      <Agenda navigation={navigation} />
+      <Agenda />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
-  container: {flex: 1}
-});
+  container: { flex: 1 },
+})

@@ -1,7 +1,15 @@
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { ThemeContext } from '../context/themeContext/ThemeContext'
 import { HomeScreen, AppointmentScreen } from '../screens'
+import { useAppDispatch } from '../hooks/redux'
+import { getTattos } from '../store/appointments/actions'
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends MainStackParamList {}
+  }
+}
 
 export type MainStackParamList = {
   Home: undefined
@@ -17,16 +25,23 @@ export const Main = () => {
   const {
     theme: { colors },
   } = useContext(ThemeContext)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(getTattos())
+  }, [])
+  
+  useEffect(() => {})
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: colors.background,  },
+        headerStyle: { backgroundColor: colors.background },
         headerTitleStyle: { color: colors.text },
-        headerTintColor: colors.text
+        headerTintColor: colors.text,
       }}
     >
-      <Stack.Screen options={{title: 'Inicio'}} name='Home' component={HomeScreen} />
-      <Stack.Screen options={{title: 'Turno'}} name='Appointment' component={AppointmentScreen} />
+      <Stack.Screen options={{ title: 'Inicio' }} name='Home' component={HomeScreen} />
+      <Stack.Screen options={{ title: 'Turno' }} name='Appointment' component={AppointmentScreen} />
     </Stack.Navigator>
   )
 }

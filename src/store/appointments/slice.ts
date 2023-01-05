@@ -1,52 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppointmentsState, Appointment } from './types'
+import { AppointmentsState, Appointment, TattoResponse } from './types'
 import dayjs from 'dayjs'
+import { getTattos } from './actions'
 
 const initialState: AppointmentsState = {
-  appointments: [
-    {
-      id: 'akd2019i0129kasda12312',
-      client: 'Pato',
-      day: new Date('2023-01-03T21:38:18.250+00:00'),
-      price: 1500,
-      description: 'Turno con pato para tatuarle un pato',
-      done: false,
-      hasPayedAdvancedDeposit: false,
-      advancedDepositAmount: 0,
-      clientContact: '@patoelgato',
-      images: [
-        'https://thumbs.dreamstime.com/b/gato-con-pato-de-goma-amarillo-y-pelirrojo-aislados-sobre-fondo-blanco-espacio-copia-215517240.jpg',
-      ],
-    },
-    {
-      id: 'akd2019i0129kasdasda',
-      client: 'Mimi',
-      day: new Date('2023-01-03T21:38:18.250+00:00'),
-      price: 2700,
-      description: 'Turno con mimi para tatuarse una paloma',
-      done: true,
-      hasPayedAdvancedDeposit: true,
-      advancedDepositAmount: 1200,
-      clientContact: '@mimimimosa',
-    },
-    {
-      id: 'akd2019i0129kas23da',
-      client: 'Poa',
-      day: new Date('2023-01-02T21:38:18.250+00:00'),
-      price: 2200,
-      done: false,
-      hasPayedAdvancedDeposit: false,
-      advancedDepositAmount: 0,
-      clientContact: '@ppppoa',
-    },
-  ],
-  agenda: {
-    '2023-01-03': [
-      { name: 'Turno - Poli', height: 11.3, day: new Date().toISOString() },
-      { name: 'Turno - Mimi', height: 14, day: new Date().toISOString() },
-    ],
-    '2023-01-02': [{ name: 'Turno - Poa', height: 11.3, day: new Date().toISOString() }],
-  },
+  appointments: [],
+  agenda: {},
   selectedDay: new Date(),
   currentAppointments: [],
 }
@@ -66,8 +25,6 @@ export const appointmentSlice = createSlice({
       state.selectedDay = action.payload
 
       const currentAppointments = state.appointments.filter((appointment) => {
-        console.log({ day: appointment.day, payload: action.payload })
-
         if (dayjs(appointment.day).isSame(action.payload, 'day')) {
           return appointment
         }
@@ -75,6 +32,29 @@ export const appointmentSlice = createSlice({
 
       state.currentAppointments = currentAppointments
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(getTattos.fulfilled, (state, action: PayloadAction<Appointment[]>) => {
+      const appointmentsSorted = action.payload.sort(
+        (a, b) => new Date(a.day).getTime() - new Date(b.day).getTime()
+      )
+
+      const AppointmentsWithSimpleDate = appointmentsSorted.map((a) => ({
+        ...a,
+        day: dayjs(a.day).format('YYYY-MM-DD'),
+      }))
+
+      const appointmentsForAgenda: Record<any, any> = AppointmentsWithSimpleDate.reduce((previous, current) => {
+        //TODO fix this type error
+        previous[current.day] = previous[current.day] || []
+        previous[current.day].push(current)
+        return previous
+      }, {})
+
+
+      state.appointments = appointmentsSorted
+      state.agenda = appointmentsForAgenda
+    })
   },
 })
 
