@@ -1,65 +1,61 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { Agenda as AgendaComponent, AgendaSchedule, DateData } from 'react-native-calendars'
+import { Agenda as AgendaComponent, DateData } from 'react-native-calendars'
 import dayjs from 'dayjs'
-import { AgendaItem, NoAppointment } from './index'
-import { MainStackParamList } from '../../navigators/Main'
+import { NoAppointment } from './index'
 import { ThemeContext } from '../../context/themeContext/ThemeContext'
-import { useAppSelector } from '../../hooks/redux'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { setSelectedDay } from '../../store/appointments/slice'
+import { Appointments } from '../appointment'
 
-const minDate = dayjs().subtract(1, 'year').toISOString()
-const maxDate = dayjs().add(1, 'year').toISOString()
+const minDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD')
+const maxDate = dayjs().add(1, 'year').format('YYYY-MM-DD')
 
-interface Props {
-  navigation: NativeStackNavigationProp<MainStackParamList, 'Home'>
-}
+const currentDate = dayjs().format('YYYY-MM-DD')
 
-export const Agenda = ({ navigation }: Props) => {
-  const [selectedDate, setSelectedDate] = useState<string>(dayjs().toISOString().split('T')[0])
-  const { agenda } = useAppSelector((state) => state.appointment)
+export const Agenda = () => {
+  const { agenda, selectedDay } = useAppSelector((state) => state.appointment)
+  const dispatch = useAppDispatch()
+
   const {
     theme: { colors },
   } = useContext(ThemeContext)
 
   const onDayPress = (date: DateData) => {
-    setSelectedDate(formatDate(dayjs(date.dateString).toDate()))
-    navigation.navigate('Appointment')
+    dispatch(setSelectedDay(dayjs(date.dateString).toDate()))
   }
 
-  const formatDate = (date: Date | string) =>
-    typeof date === 'object' ? date.toISOString().split('T')[0] : dayjs(date).toISOString().split('T')[0]
+  const selectedDate = dayjs(selectedDay).format('YYYY-MM-DD')
 
   return (
     <View style={{ ...styles.container, backgroundColor: colors.background }}>
-      <AgendaComponent
-        items={agenda}
-        onDayChange={onDayPress}
-        
-        renderEmptyData={() => <NoAppointment />}
-        renderItem={(item, isFirst) => <AgendaItem item={item} isFirst={isFirst} navigation={navigation} />}
-        
-        testID='mainAgenda'
-        minDate={minDate}
-        maxDate={maxDate}
-        current={selectedDate}
-        selected={selectedDate}
-        displayLoadingIndicator={false}
-        showClosingKnob={true}
-        showOnlySelectedDayItems={true}
-        theme={{
-          backgroundColor: colors.background,
-          calendarBackground: colors.background,
-          agendaDayNumColor: colors.primary,
-          selectedDayBackgroundColor: colors.primary,
-          agendaDayTextColor: colors.primary,
-          agendaKnobColor: colors.primary,
-          agendaTodayColor: colors.primary,
-          todayBackgroundColor: colors.background,
-          monthTextColor: colors.text,
-          dayTextColor: colors.text,
-        }}
-      />
+      <View style={{ ...styles.calendarContainer }}>
+        <AgendaComponent
+          onDayPress={onDayPress}
+          renderEmptyData={() => <NoAppointment />}
+          testID='mainAgenda'
+          minDate={minDate}
+          maxDate={maxDate}
+          current={currentDate}
+          selected={selectedDate}
+          items={agenda}
+          showClosingKnob={true}
+          theme={{
+            backgroundColor: colors.background,
+            calendarBackground: colors.background,
+            todayBackgroundColor: colors.background,
+            monthTextColor: colors.text,
+            dayTextColor: colors.text,
+
+            selectedDayBackgroundColor: colors.primary,
+            agendaDayNumColor: colors.primary,
+            agendaDayTextColor: colors.primary,
+            agendaKnobColor: colors.primary,
+            agendaTodayColor: '#ff0099',
+          }}
+        />
+      </View>
+      <Appointments />
     </View>
   )
 }
@@ -68,6 +64,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignContent: 'center',
+  },
+  calendarContainer: {
+    height: 100,
   },
   emptyDate: {
     height: 15,
