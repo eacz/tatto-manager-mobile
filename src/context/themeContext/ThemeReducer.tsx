@@ -4,6 +4,12 @@ type actionTypes = { type: 'set_dark_theme' } | { type: 'set_light_theme' }
 
 export interface ThemeState extends Theme {
   currentTheme: 'light' | 'dark'
+  h1: number
+  h2: number
+  h3: number
+  h4: number
+  h5: number
+  h6: number
 }
 
 export const lightTheme: ThemeState = {
@@ -17,6 +23,12 @@ export const lightTheme: ThemeState = {
     border: '#000000',
     notification: 'teal',
   },
+  h1: 60,
+  h2: 50,
+  h3: 40,
+  h4: 30,
+  h5: 20,
+  h6: 10,
 }
 
 export const darkTheme: ThemeState = {
@@ -30,6 +42,12 @@ export const darkTheme: ThemeState = {
     border: '#ffffff',
     notification: 'teal',
   },
+  h1: 60,
+  h2: 50,
+  h3: 40,
+  h4: 30,
+  h5: 20,
+  h6: 10,
 }
 
 const themeReducer = (state: ThemeState, action: actionTypes): ThemeState => {
