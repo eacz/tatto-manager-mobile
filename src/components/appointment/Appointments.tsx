@@ -15,7 +15,7 @@ const Appointments = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
 })
 
