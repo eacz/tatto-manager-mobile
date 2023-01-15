@@ -44,13 +44,15 @@ export const appointmentSlice = createSlice({
         day: dayjs(a.day).format('YYYY-MM-DD'),
       }))
 
-      const appointmentsForAgenda: Record<any, any> = AppointmentsWithSimpleDate.reduce((previous, current) => {
-        //TODO fix this type error
-        previous[current.day] = previous[current.day] || []
-        previous[current.day].push(current)
-        return previous
-      }, {})
-
+      const appointmentsForAgenda: Record<any, any> = AppointmentsWithSimpleDate.reduce(
+        (previous, current) => {
+          //TODO fix this type error
+          previous[current.day] = previous[current.day] || []
+          previous[current.day].push(current)
+          return previous
+        },
+        {}
+      )
 
       state.appointments = appointmentsSorted
       state.agenda = appointmentsForAgenda

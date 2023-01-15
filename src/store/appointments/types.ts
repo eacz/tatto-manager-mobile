@@ -11,6 +11,7 @@ export interface Appointment {
   hasPayedAdvancedDeposit?: boolean
   advancedDepositAmount?: number
   done?: boolean
+  hours?: number
 }
 
 export interface AppointmentsState {

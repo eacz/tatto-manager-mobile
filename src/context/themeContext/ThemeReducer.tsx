@@ -28,7 +28,7 @@ export const lightTheme: ThemeState = {
   h3: 40,
   h4: 30,
   h5: 20,
-  h6: 10,
+  h6: 15,
 }
 
 export const darkTheme: ThemeState = {
@@ -47,7 +47,7 @@ export const darkTheme: ThemeState = {
   h3: 40,
   h4: 30,
   h5: 20,
-  h6: 10,
+  h6: 15,
 }
 
 const themeReducer = (state: ThemeState, action: actionTypes): ThemeState => {
