@@ -5,72 +5,95 @@ import { ThemeContext } from '../context/themeContext/ThemeContext'
 import { Appointment } from '../store/appointments/types'
 import dayjs from 'dayjs'
 import useForm from '../hooks/useForm'
-
-type AppointmentWithoutId = Omit<Appointment, '_id'>
+import { useRoute } from '@react-navigation/native'
+import { AppointmentScreenRouteProps } from '../navigators/Main'
+import { Button } from '../components/UI/Button'
 
 export const AppointmentScreen = () => {
   const {
-    theme: { colors, h5, h6 },
+    theme: { colors },
   } = useContext(ThemeContext)
   const [showTime, setShowTime] = useState(false)
   const [showDate, setShowDate] = useState(false)
+  const {
+    params: { isNew, appointment: propAppointment },
+  } = useRoute<AppointmentScreenRouteProps>()
 
+  const initialState = propAppointment
+    ? propAppointment
+    : {
+        _id: '',
+        client: '',
+        price: 0,
+        day: new Date(),
+        hours: 0,
+        clientContact: '',
+        description: '',
+        done: false,
+        hasPayedAdvancedDeposit: false,
+        advancedDepositAmount: 0,
+      }
   const {
     done,
     hasPayedAdvancedDeposit,
+    client,
+    price,
+    description,
+    clientContact,
+    advancedDepositAmount,
+    hours,
+    day,
     onChange,
     form: appointment,
-  } = useForm<AppointmentWithoutId>({
-    client: '',
-    price: 0,
-    day: new Date(),
-    hours: 0,
-    clientContact: '',
-    description: '',
-    done: false,
-    hasPayedAdvancedDeposit: false,
-    advancedDepositAmount: 0,
-  })
+  } = useForm<Appointment>(initialState)
 
   const onChangeDate = (event: any, selectedDate: Date | undefined) => {
     setShowDate(false)
     if (selectedDate) {
       const date = dayjs(
-        `${selectedDate.toISOString().split('T')[0]}T${appointment.day.toISOString().split('T')[1]}`
+        `${selectedDate.toISOString().split('T')[0]}T${day.toISOString().split('T')[1]}`
       ).toDate()
 
-      onChange({ ...appointment, day: date }, 'day')
+      onChange(date, 'day')
     }
   }
 
   const onChangeTime = (event: any, selectedTime: Date | undefined) => {
     setShowTime(false)
     if (selectedTime) {
-      const date = dayjs(appointment.day)
-        .set('hour', selectedTime.getHours())
-        .set('minutes', selectedTime.getMinutes())
-        .toDate()
+      const date = dayjs(`${day.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`)
 
-      onChange({ ...appointment, day: date }, 'day')
+      onChange(date, 'day')
     }
   }
-  console.log({ appointment })
+
+  const SaveAppointment = () => {
+    console.log('xd')
+  }
+
 
   return (
     <View style={{ ...styles.container, backgroundColor: colors.background }}>
-      <TextInput style={{ ...styles.input, borderColor: colors.primary }} placeholder='Cliente' />
+      <TextInput
+        style={{ ...styles.input, borderColor: colors.primary }}
+        value={client}
+        onChangeText={(value) => onChange(value, 'client')}
+        placeholder='Cliente'
+      />
 
       <TextInput
         style={{ ...styles.input, borderColor: colors.primary }}
         keyboardType='numeric'
         placeholder='Precio'
+        value={String(price)}
+        onChangeText={(value) => onChange(Number(value), 'price')}
       />
 
       <View
         onTouchStart={() => setShowDate(true)}
         style={{ ...styles.dateContainer, borderColor: colors.primary }}
       >
-        <Text>Fecha</Text>
+        <Text>{dayjs(day).format('DD/MM')}</Text>
       </View>
       {showDate && (
         <DateTimePicker
@@ -85,7 +108,7 @@ export const AppointmentScreen = () => {
         onTouchStart={() => setShowTime(true)}
         style={{ ...styles.dateContainer, borderColor: colors.primary }}
       >
-        <Text>Hora</Text>
+        <Text>{dayjs(day).format('HH:mm')}</Text>
       </View>
       {showTime && (
         <DateTimePicker
@@ -97,8 +120,18 @@ export const AppointmentScreen = () => {
         />
       )}
 
-      <TextInput style={{ ...styles.input, borderColor: colors.primary }} placeholder='Descripción' />
-      <TextInput style={{ ...styles.input, borderColor: colors.primary }} placeholder='Contacto de Cliente' />
+      <TextInput
+        style={{ ...styles.input, borderColor: colors.primary }}
+        value={description}
+        onChangeText={(value) => onChange(value, 'description')}
+        placeholder='Descripción'
+      />
+      <TextInput
+        style={{ ...styles.input, borderColor: colors.primary }}
+        value={clientContact}
+        onChangeText={(value) => onChange(value, 'clientContact')}
+        placeholder='Contacto de Cliente'
+      />
       <View style={styles.switchContainer}>
         <Text>Seña</Text>
         <View style={styles.switchContainerContent}>
@@ -116,6 +149,8 @@ export const AppointmentScreen = () => {
             }}
             placeholder='Cantidad'
             keyboardType='numeric'
+            value={String(advancedDepositAmount)}
+            onChangeText={(value) => onChange(Number(value), 'advancedDepositAmount')}
           />
         </View>
       </View>
@@ -136,8 +171,13 @@ export const AppointmentScreen = () => {
             }}
             placeholder='Horas'
             keyboardType='numeric'
+            value={String(hours)}
+            onChangeText={(value) => onChange(Number(value), 'hours')}
           />
         </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button text='Guardar' onPress={SaveAppointment} />
       </View>
     </View>
   )
@@ -183,5 +223,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     height: 60,
+  },
+  buttonContainer: {
+    width: '100%',
+    marginTop: 50,
   },
 })
