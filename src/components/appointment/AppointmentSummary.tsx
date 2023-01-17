@@ -19,7 +19,7 @@ const AppointmentSummary = ({ appointment }: Props) => {
   const hourParsed = dayjs(appointment.day).format('HH:MM')
 
   const handlePress = () => {
-    navigation.navigate('Appointment')
+    navigation.navigate('Appointment', { isNew: false, appointment: appointment })
   }
 
   return (
