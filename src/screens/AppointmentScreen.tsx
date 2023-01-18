@@ -50,9 +50,11 @@ export const AppointmentScreen = () => {
   const onChangeDate = (event: any, selectedDate: Date | undefined) => {
     setShowDate(false)
     if (selectedDate) {
+      const currentDate = dayjs(day).toDate()
+
       const date = dayjs(
-        `${selectedDate.toISOString().split('T')[0]}T${day.toISOString().split('T')[1]}`
-      ).toDate()
+        `${selectedDate.toISOString().split('T')[0]}T${currentDate.toISOString().split('T')[1]}`
+      )
 
       onChange(date, 'day')
     }
@@ -61,16 +63,19 @@ export const AppointmentScreen = () => {
   const onChangeTime = (event: any, selectedTime: Date | undefined) => {
     setShowTime(false)
     if (selectedTime) {
-      const date = dayjs(`${day.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`)
+      const currentDate = dayjs(day).toDate()
+
+      const date = dayjs(
+        `${currentDate.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`
+      )
 
       onChange(date, 'day')
     }
   }
 
   const SaveAppointment = () => {
-    console.log('xd')
+    console.log({ appointment })
   }
-
 
   return (
     <View style={{ ...styles.container, backgroundColor: colors.background }}>
