@@ -21,7 +21,7 @@ export interface AppointmentsState {
   selectedDay: Date
 }
 
-export interface TattoResponse {
+export interface TattooResponse {
   _id: string
   client: string
   day: string

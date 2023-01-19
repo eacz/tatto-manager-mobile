@@ -1,7 +1,7 @@
 import { AxiosInstance } from '../../shared'
-import { TattoResponse, Appointment } from './types'
+import { TattooResponse, Appointment } from './types'
 
-export interface GetTattosProps {
+export interface GetTattoosProps {
   offset?: number
   limit?: number
   done?: boolean
@@ -9,25 +9,25 @@ export interface GetTattosProps {
 }
 
 const tattooApi = {
-  async getTattos(getTattosProps?: GetTattosProps) {
+  async getTattoos(getTattoosProps?: GetTattoosProps) {
     try {
-      const res = await AxiosInstance.get<Appointment[]>('/tattoo', { params: getTattosProps })
+      const res = await AxiosInstance.get<Appointment[]>('/tattoo', { params: getTattoosProps })
       return res.data
     } catch (error) {
       throw error
     }
   },
 
-  async getTattosByDate(getTattosProps: GetTattosProps) {
+  async getTattoosByDate(getTattoosProps: GetTattoosProps) {
     try {
-      const res = await AxiosInstance.get<Appointment[]>('/tattoo', { params: getTattosProps })
+      const res = await AxiosInstance.get<Appointment[]>('/tattoo', { params: getTattoosProps })
       return res.data
     } catch (error) {
       throw error
     }
   },
 
-  async getTattoById(id: string) {
+  async getTattooById(id: string) {
     try {
       const res = await AxiosInstance.get<Appointment>(`/tattos/${id}`)
       return res.data
@@ -35,6 +35,14 @@ const tattooApi = {
       throw error
     }
   },
+
+  async postTattoo(appointment: Appointment){
+    try {
+      const res = await AxiosInstance.post<Appointment>('/tattos')
+    } catch (error) {
+      
+    }
+  }
 }
 
 export default tattooApi

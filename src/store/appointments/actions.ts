@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import tattooApi, { GetTattosProps } from './api'
+import tattooApi, { GetTattoosProps } from './api'
 
-export const getTattos = createAsyncThunk('tattos', async (getTattosProps?: GetTattosProps) => {
+export const getTattoos = createAsyncThunk('tattos', async (getTattosProps?: GetTattoosProps) => {
   try {
-    const res = await tattooApi.getTattos(getTattosProps)
+    const res = await tattooApi.getTattoos(getTattosProps)
     return res
   } catch (error) {
     console.log(error)

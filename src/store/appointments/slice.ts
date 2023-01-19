@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppointmentsState, Appointment, TattoResponse } from './types'
+import { AppointmentsState, Appointment } from './types'
 import dayjs from 'dayjs'
-import { getTattos } from './actions'
+
+import { getTattoos } from './actions'
 
 const initialState: AppointmentsState = {
   appointments: [],
@@ -34,7 +35,7 @@ export const appointmentSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(getTattos.fulfilled, (state, action: PayloadAction<Appointment[]>) => {
+    builder.addCase(getTattoos.fulfilled, (state, action: PayloadAction<Appointment[]>) => {
       const appointmentsSorted = action.payload.sort(
         (a, b) => new Date(a.day).getTime() - new Date(b.day).getTime()
       )
@@ -44,15 +45,13 @@ export const appointmentSlice = createSlice({
         day: dayjs(a.day).format('YYYY-MM-DD'),
       }))
 
-      const appointmentsForAgenda: Record<any, any> = AppointmentsWithSimpleDate.reduce(
-        (previous, current) => {
-          //TODO fix this type error
-          previous[current.day] = previous[current.day] || []
-          previous[current.day].push(current)
-          return previous
-        },
-        {}
-      )
+      const initialState: Record<string, Array<any>> = {}
+
+      const appointmentsForAgenda = AppointmentsWithSimpleDate.reduce((previous, current) => {
+        previous[current.day] = previous[current.day] || []
+        previous[current.day].push(current)
+        return previous
+      }, initialState)
 
       state.appointments = appointmentsSorted
       state.agenda = appointmentsForAgenda

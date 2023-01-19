@@ -1,9 +1,9 @@
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useContext, useEffect } from 'react'
 import { ThemeContext } from '../context/themeContext/ThemeContext'
 import { HomeScreen, AppointmentScreen } from '../screens'
 import { useAppDispatch } from '../hooks/redux'
-import { getTattos } from '../store/appointments/actions'
+import { getTattoos } from '../store/appointments/actions'
 import { Appointment } from '../store/appointments/types'
 import { Button } from '../components/UI/Button'
 import { RouteProp, useNavigation } from '@react-navigation/native'
@@ -31,7 +31,7 @@ export const Main = () => {
   const dispatch = useAppDispatch()
   const navigation = useNavigation()
   useEffect(() => {
-    dispatch(getTattos())
+    dispatch(getTattoos())
   }, [])
 
   useEffect(() => {})
