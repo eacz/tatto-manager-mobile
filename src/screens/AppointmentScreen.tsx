@@ -5,9 +5,11 @@ import { ThemeContext } from '../context/themeContext/ThemeContext'
 import { Appointment } from '../store/appointments/types'
 import dayjs from 'dayjs'
 import useForm from '../hooks/useForm'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { AppointmentScreenRouteProps } from '../navigators/Main'
 import { Button } from '../components/UI/Button'
+import { useAppDispatch } from '../hooks/redux'
+import { createTattoo, updateTattoo } from '../store/appointments/actions'
 
 export const AppointmentScreen = () => {
   const {
@@ -18,6 +20,8 @@ export const AppointmentScreen = () => {
   const {
     params: { isNew, appointment: propAppointment },
   } = useRoute<AppointmentScreenRouteProps>()
+  const dispatch = useAppDispatch()
+  const navigation = useNavigation()
 
   const initialState = propAppointment
     ? propAppointment
@@ -74,7 +78,12 @@ export const AppointmentScreen = () => {
   }
 
   const SaveAppointment = () => {
-    console.log({ appointment })
+    if (isNew) {
+      dispatch(createTattoo(appointment))
+    } else {
+      dispatch(updateTattoo(appointment))
+    }
+    navigation.navigate('Home')
   }
 
   return (

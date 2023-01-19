@@ -1,0 +1,1 @@
+export { parseAppointmentToAgenda } from './parseAppointmentToAgenda'

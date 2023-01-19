@@ -1,5 +1,5 @@
 import { AxiosInstance } from '../../shared'
-import { TattooResponse, Appointment } from './types'
+import { Appointment } from './types'
 
 export interface GetTattoosProps {
   offset?: number
@@ -29,20 +29,31 @@ const tattooApi = {
 
   async getTattooById(id: string) {
     try {
-      const res = await AxiosInstance.get<Appointment>(`/tattos/${id}`)
+      const res = await AxiosInstance.get<Appointment>(`/tattoo/${id}`)
       return res.data
     } catch (error) {
       throw error
     }
   },
 
-  async postTattoo(appointment: Appointment){
+  async postTattoo(appointment: Appointment) {
     try {
-      const res = await AxiosInstance.post<Appointment>('/tattos')
+      delete appointment._id;
+      const res = await AxiosInstance.post<Appointment>('/tattoo', { ...appointment })
+      return res.data
     } catch (error) {
-      
+      throw error
     }
-  }
+  },
+
+  async patchTattoo(appointment: Appointment) {
+    try {
+      const res = await AxiosInstance.patch<Appointment>('/tattoo', { ...appointment })
+      return res.data
+    } catch (error) {
+      throw error
+    }
+  },
 }
 
 export default tattooApi
