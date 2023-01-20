@@ -1,8 +1,10 @@
 import dayjs from 'dayjs'
 import { Appointment } from '../store/appointments/types'
 
-export const parseAppointmentToAgenda = (appoinments: Appointment[]) => {
-  const appointmentsSorted = appoinments.sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime())
+export const parseAppointmentToAgenda = (appointments: Appointment[], date?: Date) => {
+  const appointmentsSorted = appointments.sort(
+    (a, b) => new Date(a.day).getTime() - new Date(b.day).getTime()
+  )
 
   const AppointmentsWithSimpleDate = appointmentsSorted.map((a) => ({
     ...a,
@@ -17,8 +19,18 @@ export const parseAppointmentToAgenda = (appoinments: Appointment[]) => {
     return previous
   }, initialState)
 
+  let currentAppointments: Appointment[] = []
+  if (date) {
+    currentAppointments = appointments.filter((appointment) => {
+      if (dayjs(appointment.day).isSame(date, 'day')) {
+        return appointment
+      }
+    })
+  }
+
   return {
     appointmentsSorted,
     appointmentsForAgenda,
+    currentAppointments,
   }
 }

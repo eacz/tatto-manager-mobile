@@ -56,16 +56,19 @@ export const appointmentSlice = createSlice({
       state.loading = true
     })
     builder.addCase(createTattoo.fulfilled, (state, action: PayloadAction<Appointment>) => {
-      const { appointmentsForAgenda, appointmentsSorted } = parseAppointmentToAgenda([
-        ...state.appointments,
-        action.payload,
-      ])
+      const { appointmentsForAgenda, appointmentsSorted, currentAppointments } = parseAppointmentToAgenda(
+        [...state.appointments, action.payload],
+        state.selectedDay
+      )
+
       state.appointments = appointmentsSorted
       state.agenda = appointmentsForAgenda
+      state.currentAppointments = currentAppointments
+      state.loading = false
     })
     //TODO set error messages
     builder.addCase(createTattoo.rejected, (state) => {
-      state.loading = true
+      state.loading = false
     })
 
     builder.addCase(updateTattoo.pending, (state) => {
@@ -75,6 +78,11 @@ export const appointmentSlice = createSlice({
       state.appointments = state.appointments.map((appointment) =>
         appointment._id === action.payload._id ? action.payload : appointment
       )
+
+      state.currentAppointments = state.currentAppointments.map((appointment) =>
+        appointment._id === action.payload._id ? action.payload : appointment
+      )
+
       state.loading = false
     })
     //TODO set error messages
