@@ -38,7 +38,7 @@ const tattooApi = {
 
   async postTattoo(appointment: Appointment) {
     try {
-      delete appointment._id;
+      delete appointment._id
       const res = await AxiosInstance.post<Appointment>('/tattoo', { ...appointment })
       return res.data
     } catch (error) {
@@ -48,7 +48,9 @@ const tattooApi = {
 
   async patchTattoo(appointment: Appointment) {
     try {
-      const res = await AxiosInstance.patch<Appointment>('/tattoo', { ...appointment })
+      const appointmentId = appointment._id
+      delete appointment._id
+      const res = await AxiosInstance.patch<Appointment>(`/tattoo/${appointmentId}`, { ...appointment })
       return res.data
     } catch (error) {
       throw error

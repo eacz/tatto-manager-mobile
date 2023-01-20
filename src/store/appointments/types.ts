@@ -19,4 +19,6 @@ export interface AppointmentsState {
   appointments: Appointment[]
   currentAppointments: Appointment[]
   selectedDay: Date
+  loading: boolean
+  error: string | null
 }
