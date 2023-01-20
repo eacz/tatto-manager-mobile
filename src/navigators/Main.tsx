@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useContext, useEffect } from 'react'
 import { ThemeContext } from '../context/themeContext/ThemeContext'
-import { HomeScreen, AppointmentScreen } from '../screens'
-import { useAppDispatch } from '../hooks/redux'
+import { HomeScreen, AppointmentScreen, LoadingScreen } from '../screens'
+import { useAppDispatch, useAppSelector } from '../hooks/redux'
 import { getTattoos } from '../store/appointments/actions'
 import { Appointment } from '../store/appointments/types'
 import { Button } from '../components/UI/Button'
@@ -16,6 +16,7 @@ declare global {
 
 export type MainStackParamList = {
   Home: undefined
+  Loading: undefined
   Appointment: { isNew: boolean; appointment?: Appointment }
 }
 
@@ -28,13 +29,13 @@ export const Main = () => {
   const {
     theme: { colors },
   } = useContext(ThemeContext)
+  const loading = useAppSelector((state) => state.appointment.loading)
   const dispatch = useAppDispatch()
   const navigation = useNavigation()
   useEffect(() => {
     dispatch(getTattoos())
   }, [])
 
-  useEffect(() => {})
   return (
     <Stack.Navigator
       screenOptions={{
@@ -43,17 +44,26 @@ export const Main = () => {
         headerTintColor: colors.text,
       }}
     >
-      <Stack.Screen
-        options={{
-          title: 'Inicio',
-          headerRight: () => (
-            <Button text='Nuevo turno' onPress={() => navigation.navigate('Appointment', { isNew: true })} />
-          ),
-        }}
-        name='Home'
-        component={HomeScreen}
-      />
-      <Stack.Screen options={{ title: 'Turno' }} name='Appointment' component={AppointmentScreen} />
+      {loading ? (
+        <Stack.Screen options={{ headerShown: false }} name='Loading' component={LoadingScreen} />
+      ) : (
+        <>
+          <Stack.Screen
+            options={{
+              title: 'Inicio',
+              headerRight: () => (
+                <Button
+                  text='Nuevo turno'
+                  onPress={() => navigation.navigate('Appointment', { isNew: true })}
+                />
+              ),
+            }}
+            name='Home'
+            component={HomeScreen}
+          />
+          <Stack.Screen options={{ title: 'Turno' }} name='Appointment' component={AppointmentScreen} />
+        </>
+      )}
     </Stack.Navigator>
   )
 }
