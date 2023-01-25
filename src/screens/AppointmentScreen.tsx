@@ -12,6 +12,7 @@ import { AppointmentScreenRouteProps } from '../navigators/Main'
 import { Button } from '../components/UI/Button'
 import { useAppDispatch } from '../hooks/redux'
 import { createTattoo, updateTattoo } from '../store/appointments/actions'
+import { AppointmentImages } from '../components/appointment'
 
 export const AppointmentScreen = () => {
   const {
@@ -202,6 +203,8 @@ export const AppointmentScreen = () => {
           />
         </View>
       </View>
+      {appointment.images && <AppointmentImages images={appointment.images} />}
+
       <View style={styles.buttonContainer}>
         <Button text='Añadir imagenes' onPress={selectImages} />
       </View>
