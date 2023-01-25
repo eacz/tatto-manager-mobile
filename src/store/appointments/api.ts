@@ -36,10 +36,14 @@ const tattooApi = {
     }
   },
 
-  async postTattoo(appointment: Appointment) {
+  async postTattoo(data: FormData) {
     try {
-      delete appointment._id
-      const res = await AxiosInstance.post<Appointment>('/tattoo', { ...appointment })
+      const res = await AxiosInstance.post<Appointment>('/tattoo', data, {
+        headers: {
+          'Content-Type': `multipart/form-data`,
+          mimeType: 'multipart/form-data',
+        },
+      })
       return res.data
     } catch (error) {
       throw error

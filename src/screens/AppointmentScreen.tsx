@@ -1,9 +1,11 @@
 import { useContext, useState } from 'react'
 import { StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import dayjs from 'dayjs'
+import { Asset, launchImageLibrary } from 'react-native-image-picker'
+
 import { ThemeContext } from '../context/themeContext/ThemeContext'
 import { Appointment } from '../store/appointments/types'
-import dayjs from 'dayjs'
 import useForm from '../hooks/useForm'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { AppointmentScreenRouteProps } from '../navigators/Main'
@@ -17,6 +19,7 @@ export const AppointmentScreen = () => {
   } = useContext(ThemeContext)
   const [showTime, setShowTime] = useState(false)
   const [showDate, setShowDate] = useState(false)
+  const [images, setImages] = useState<Asset[] | undefined>([])
   const {
     params: { isNew, appointment: propAppointment },
   } = useRoute<AppointmentScreenRouteProps>()
@@ -79,12 +82,22 @@ export const AppointmentScreen = () => {
 
   const SaveAppointment = () => {
     if (isNew) {
-      dispatch(createTattoo(appointment))
+      dispatch(createTattoo({ appointment, images }))
     } else {
       dispatch(updateTattoo(appointment))
     }
     navigation.navigate('Home')
   }
+
+  const selectImages = async () => {
+    await launchImageLibrary({ mediaType: 'photo', selectionLimit: 3 }, (res) => {
+      if (res && !res.didCancel) {
+        setImages(res.assets)
+      }
+    })
+  }
+
+  console.log(appointment)
 
   return (
     <View style={{ ...styles.container, backgroundColor: colors.background }}>
@@ -94,7 +107,6 @@ export const AppointmentScreen = () => {
         onChangeText={(value) => onChange(value, 'client')}
         placeholder='Cliente'
       />
-
       <TextInput
         style={{ ...styles.input, borderColor: colors.primary }}
         keyboardType='numeric'
@@ -102,7 +114,6 @@ export const AppointmentScreen = () => {
         value={String(price)}
         onChangeText={(value) => onChange(Number(value), 'price')}
       />
-
       <View
         onTouchStart={() => setShowDate(true)}
         style={{ ...styles.dateContainer, borderColor: colors.primary }}
@@ -133,7 +144,6 @@ export const AppointmentScreen = () => {
           onChange={onChangeTime}
         />
       )}
-
       <TextInput
         style={{ ...styles.input, borderColor: colors.primary }}
         value={description}
@@ -160,6 +170,7 @@ export const AppointmentScreen = () => {
               borderColor: colors.primary,
               display: hasPayedAdvancedDeposit ? 'flex' : 'none',
               opacity: hasPayedAdvancedDeposit ? 1 : 0,
+              marginBottom: 20,
             }}
             placeholder='Cantidad'
             keyboardType='numeric'
@@ -182,6 +193,7 @@ export const AppointmentScreen = () => {
               borderColor: colors.primary,
               display: done ? 'flex' : 'none',
               opacity: done ? 1 : 0,
+              marginBottom: 20,
             }}
             placeholder='Horas'
             keyboardType='numeric'
@@ -189,6 +201,9 @@ export const AppointmentScreen = () => {
             onChangeText={(value) => onChange(Number(value), 'hours')}
           />
         </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button text='Añadir imagenes' onPress={selectImages} />
       </View>
       <View style={styles.buttonContainer}>
         <Button text='Guardar' onPress={SaveAppointment} />

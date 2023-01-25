@@ -4,7 +4,6 @@ import { AppointmentSummary } from '.'
 import { NoAppointment } from '../agenda'
 const Appointments = () => {
   const { currentAppointments } = useAppSelector((state) => state.appointment)
-  console.log({ currentAppointments })
 
   return (
     <View style={styles.container}>
