@@ -38,7 +38,6 @@ export const Agenda = () => {
           maxDate={maxDate}
           current={currentDate}
           selected={selectedDate}
-          selectedDay={selectedDate}
           items={agenda}
           showClosingKnob={true}
           theme={{

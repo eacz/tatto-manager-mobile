@@ -1,4 +1,3 @@
-import React from 'react'
 import { View, Button as RNButton } from 'react-native'
 import { useContext } from 'react'
 import { ThemeContext } from '../../context/themeContext/ThemeContext'

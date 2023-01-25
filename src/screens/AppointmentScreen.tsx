@@ -98,8 +98,6 @@ export const AppointmentScreen = () => {
     })
   }
 
-  console.log(appointment)
-
   return (
     <View style={{ ...styles.container, backgroundColor: colors.background }}>
       <TextInput
