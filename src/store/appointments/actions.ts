@@ -70,3 +70,13 @@ export const updateTattoo = createAsyncThunk('update-tattos', async (appointment
     throw error
   }
 })
+
+export const deleteTattoo = createAsyncThunk('delete-tattoo', async (appointmentId: string) => {
+  try {
+    await tattooApi.deleteTattoo(appointmentId)
+    return appointmentId
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+})

@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { Alert, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import dayjs from 'dayjs'
 import { Asset, launchImageLibrary } from 'react-native-image-picker'
@@ -11,7 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { AppointmentScreenRouteProps } from '../navigators/Main'
 import { Button } from '../components/UI/Button'
 import { useAppDispatch } from '../hooks/redux'
-import { createTattoo, updateTattoo } from '../store/appointments/actions'
+import { createTattoo, deleteTattoo, updateTattoo } from '../store/appointments/actions'
 import { AppointmentImages } from '../components/appointment'
 
 export const AppointmentScreen = () => {
@@ -96,6 +96,24 @@ export const AppointmentScreen = () => {
         setImages(res.assets)
       }
     })
+  }
+
+  const deleteAppointment = () => {
+    if (appointment._id) {
+      const id = appointment._id
+      Alert.alert('Estas segura de eliminar este turno?', 'Esta acción no es reversible', [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Confirmar',
+          onPress: () => {
+            dispatch(deleteTattoo(id))
+            if (navigation.canGoBack()) {
+              navigation.goBack()
+            }
+          },
+        },
+      ])
+    }
   }
 
   return (
@@ -206,8 +224,14 @@ export const AppointmentScreen = () => {
       <View style={styles.buttonContainer}>
         <Button text='Añadir imagenes' onPress={selectImages} />
       </View>
-      <View style={styles.buttonContainer}>
-        <Button text='Guardar' onPress={SaveAppointment} />
+
+      <View style={styles.groupButtons}>
+        <View style={styles.groupButton}>
+          <Button text='Guardar' onPress={SaveAppointment} />
+        </View>
+        <View style={styles.groupButton}>
+          <Button text='Eliminar' color='#d30000' onPress={deleteAppointment} />
+        </View>
       </View>
     </View>
   )
@@ -257,5 +281,15 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     marginTop: 50,
+  },
+  groupButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  groupButton: {
+    width: '48%',
   },
 })

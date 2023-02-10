@@ -60,6 +60,15 @@ const tattooApi = {
       throw error
     }
   },
+
+  async deleteTattoo(appointmentId: string) {
+    try {
+      await AxiosInstance.delete<void>(`/tattoo/${appointmentId}`)
+      return true
+    } catch (error) {
+      throw error
+    }
+  },
 }
 
 export default tattooApi

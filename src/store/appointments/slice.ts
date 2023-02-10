@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import dayjs from 'dayjs'
 
 import { AppointmentsState, Appointment } from './types'
-import { getTattoos, createTattoo, updateTattoo } from './actions'
+import { getTattoos, createTattoo, updateTattoo, deleteTattoo } from './actions'
 import { parseAppointmentToAgenda } from '../../helpers'
 
 const initialState: AppointmentsState = {
@@ -91,6 +91,25 @@ export const appointmentSlice = createSlice({
     })
     //TODO set error messages
     builder.addCase(updateTattoo.rejected, (state) => {
+      state.loading = false
+    })
+    builder.addCase(deleteTattoo.pending, (state) => {
+      state.loading = true
+    })
+    builder.addCase(deleteTattoo.fulfilled, (state, action: PayloadAction<string>) => {
+      const deletedAppointment = state.appointments.find((appointment) => appointment._id === action.payload)
+      state.appointments = state.appointments.filter((appointment) => appointment._id !== action.payload)
+      state.currentAppointments = state.currentAppointments.filter(
+        (appointment) => appointment._id !== action.payload
+      )
+
+      const { appointmentsForAgenda } = parseAppointmentToAgenda(state.appointments, state.selectedDay)
+      state.agenda = appointmentsForAgenda
+
+      state.loading = false
+    })
+    //TODO set error messages
+    builder.addCase(deleteTattoo.rejected, (state) => {
       state.loading = false
     })
   },
